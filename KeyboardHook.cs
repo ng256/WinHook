@@ -247,7 +247,7 @@ namespace WinHook
                 case Keys.Shift:
                 case Keys.Control:
                 case Keys.Alt:
-                    return $"{{{vk}}}";
+                    return $"{" + vk.ToString() + "}";
                 default:
                     return ToUnicode(vk, hkl, out scan);
             }
