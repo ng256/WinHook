@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Security;
 using static WinHook.Kernel32;
 
@@ -8,20 +9,17 @@ namespace WinHook
     public class NamedEvent
     {
         private const string NAME = "47622A58-54A1-4842-8AD9-80F475524B55";
-
-        public const int WaitForInfinite = -1;
-        public static readonly NamedEvent Deafult = new NamedEvent(NAME);
-        private readonly IntPtr _attributes = IntPtr.Zero;
         private readonly string _eventName;
-        private readonly bool _initialState;
-        private readonly bool _manualReset;
         private IntPtr _handle;
+        private readonly IntPtr _attributes = IntPtr.Zero;
+        private readonly bool _manualReset;
+        private readonly bool _initialState;
 
+        public const int WaitForInfinite = -1;  
 
-        public NamedEvent(string eventName)
-            : this(eventName, false)
-        {
-        }
+        public static readonly NamedEvent Deafult = new NamedEvent(NAME);
+
+        public NamedEvent(string eventName) : this(eventName, false) { }
 
         public NamedEvent(string eventName, bool manualReset)
         {
@@ -35,7 +33,8 @@ namespace WinHook
             try
             {
                 _handle = CreateEvent(_attributes, _manualReset, _initialState, _eventName);
-                return WaitForSingleObject(_handle, timeoutInSecs * 1000) == 0;
+                int rc = WaitForSingleObject(_handle, timeoutInSecs * 1000);
+                return rc == 0;
             }
             finally
             {
@@ -83,24 +82,13 @@ namespace WinHook
             }
         }
 
-        public static bool Wait(int timeoutInSecs, string name)
-        {
-            return new NamedEvent(name).Wait(timeoutInSecs);
-        }
+        public static bool Wait(int timeoutInSecs, string name) 
+            => new NamedEvent(name).Wait(timeoutInSecs);
 
-        public static bool Pulse(string name)
-        {
-            return new NamedEvent(name).Pulse();
-        }
+        public static bool Pulse(string name) => new NamedEvent(name).Pulse();
 
-        public static void Set(string name)
-        {
-            new NamedEvent(name).Set();
-        }
+        public static void Set(string name) => new NamedEvent(name).Set();
 
-        public static void Reset(string name)
-        {
-            new NamedEvent(name).Reset();
-        }
+        public static void Reset(string name) => new NamedEvent(name).Reset();
     }
 }

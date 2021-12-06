@@ -3,6 +3,8 @@ using System.Windows.Forms;
 
 namespace WinHook
 {
+    public delegate void ClipBoardEventHandler(ClipboardChangedEventArgs eventArgs);
+
     public class ClipboardChangedEventArgs : EventArgs
     {
         public IDataObject ClipboardData { get; set; }

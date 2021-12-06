@@ -1,9 +1,12 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace WinHook
 {
+    public delegate void LowLevelKeyEventHandler(object sender, LowLevelKeyboardEventArgs eventArgs);
+
     public class LowLevelKeyboardEventArgs
     {
+        private bool _handled;
         private bool _suppressKeyPress;
 
         public LowLevelKeyboardEventArgs(Keys virtualKey)
@@ -19,16 +22,17 @@ namespace WinHook
         public virtual bool Alt { get; set; }
         public bool Control { get; set; }
         public virtual bool Shift { get; set; }
-
-        public bool Handled { get; set; }
-
+        public bool Handled { get => _handled; set => _handled = value; }
         public bool SuppressKeyPress
         {
-            get => _suppressKeyPress;
+            get
+            {
+                return this._suppressKeyPress;
+            }
             set
             {
-                _suppressKeyPress = value;
-                Handled = value;
+                this._suppressKeyPress = value;
+                this._handled = value;
             }
         }
     }

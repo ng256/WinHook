@@ -1,8 +1,9 @@
-namespace WinHook
+﻿namespace WinHook
 {
     public enum KeyState : ushort
     {
-        KeySwitched = 1,
+        KeySwitched = 0x0001,
         KeyPressed = 0x8000
     }
 }
+

@@ -1,16 +1,19 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{0452CAB2-FB71-4E2F-98D2-3A21981B6E2C}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{85FE4DD9-5FF8-4869-89DA-AFA50EA1F98C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>WinHook</AssemblyName>
+    <RootNamespace>WinHook</RootNamespace>
+    <AssemblyName>Keylogger</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -18,19 +21,22 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>WinHook</RootNamespace>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,28 +50,28 @@
     <Compile Include="HookCode.cs" />
     <Compile Include="HookType.cs" />
     <Compile Include="Kernel32.cs" />
+    <Compile Include="LowLevelKeyboardEventArgs.cs" />
     <Compile Include="KeyboardHook.cs" />
+    <Compile Include="KeyboardLayoutFlags.cs" />
+    <Compile Include="KeyFlag.cs" />
     <Compile Include="KeyboardLowLevelHookData.cs" />
+    <Compile Include="KeyEventFlag.cs" />
     <Compile Include="KeyEventType.cs" />
     <Compile Include="KeyState.cs" />
-    <Compile Include="LowLevelKeyboardEventArgs.cs" />
     <Compile Include="LowLevelKeyboardHookFlag.cs" />
     <Compile Include="MapType.cs" />
     <Compile Include="NamedEvent.cs" />
     <Compile Include="ProcessInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="User32.cs" />
     <Compile Include="WindowInfo.cs" />
     <Compile Include="WindowsHook.cs" />
     <Compile Include="WindowTextChangeArgs.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="WinHookContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
-  <ProjectExtensions>
-    <VisualStudio AllowExistingFolder="true" />
-  </ProjectExtensions>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

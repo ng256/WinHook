@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 
 namespace WinHook
 {
-    public enum KeyEventType
+    [Flags]
+    public enum KeyEventType : int
     {
         WM_KEYDOWN = 0x100,
         WM_KEYUP = 0x101,

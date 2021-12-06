@@ -1,23 +1,19 @@
-using System;
+﻿using System;
 using System.Threading;
 
 namespace WinHook
 {
     public class DuplicateLaunch : IDisposable
     {
-        private const string NAME = "FEF01A7A-E82F-45DD-9A92-3EB59C456D2E";
+        private const string NAME = @"FEF01A7A-E82F-45DD-9A92-3EB59C456D2E";
+        private Mutex _mutex = null;
+        private string _name;
+
         public static readonly DuplicateLaunch Default = new DuplicateLaunch(NAME);
-        private Mutex _mutex;
-        private readonly string _name;
 
         public DuplicateLaunch(string name)
         {
             _name = name;
-        }
-
-        public void Dispose()
-        {
-            _mutex?.Dispose();
         }
 
         public bool Detect()
@@ -32,6 +28,11 @@ namespace WinHook
                 _mutex = new Mutex(true, _name);
                 return false;
             }
+        }
+
+        public void Dispose()
+        {
+            _mutex?.Dispose();
         }
     }
 }

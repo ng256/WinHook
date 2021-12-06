@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace WinHook
@@ -9,9 +9,13 @@ namespace WinHook
         public static void Main()
         {
             if (DuplicateLaunch.Default.Detect())
+            {
                 NamedEvent.Deafult.Set();
+            }
             else
+            {
                 Application.Run(new WinHookContext());
+            }
         }
     }
 }

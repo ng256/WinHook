@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -6,13 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using static WinHook.User32;
+using static WinHook.Kernel32;
 
 namespace WinHook
 {
-    public delegate IntPtr LowLevelKeyboardProc(HookCode nCode, KeyEventType wParam,
-        KeyboardLowLevelHookData lParam);
-    public delegate void LowLevelKeyEventHandler(object sender, LowLevelKeyboardEventArgs eventArgs);
-
     public class KeyboardHook : IDisposable
     {
         private readonly LowLevelKeyboardProc _callback;
@@ -55,7 +52,6 @@ namespace WinHook
             var layout = GetKeyboardLayoutId(hkl);
             var text = GetText(vk, shift, control, alt, hkl, scan);
             var flag = lParam.flags;
-            GetAsyncKeyState(vk);
             var eventArgs = new LowLevelKeyboardEventArgs(vk)
             {
                 Shift = shift,
@@ -101,7 +97,7 @@ namespace WinHook
         {
             var lpKeyState = new byte[256];
             GetKeyboardState(lpKeyState);
-            var vScanCode = (char) MapVirtualKeyEx(virtualKey, MapType.MAPVK_VK_TO_CHAR, keybLayout);
+            var vScanCode = (char)MapVirtualKeyEx(virtualKey, MapType.MAPVK_VK_TO_CHAR, keybLayout);
             var stringBuilder = new StringBuilder(5);
             ToUnicodeEx(virtualKey, vScanCode, lpKeyState, stringBuilder, 5, 0u, keybLayout);
             return stringBuilder.ToString();
@@ -111,7 +107,7 @@ namespace WinHook
         {
             var lpKeyState = new byte[256];
             GetKeyboardState(lpKeyState);
-            scanCode = (char) MapVirtualKeyEx(virtualKey, MapType.MAPVK_VK_TO_CHAR, keybLayout);
+            scanCode = (char)MapVirtualKeyEx(virtualKey, MapType.MAPVK_VK_TO_CHAR, keybLayout);
             var stringBuilder = new StringBuilder(5);
             ToUnicodeEx(virtualKey, scanCode, lpKeyState, stringBuilder, 5, 0u, keybLayout);
             return stringBuilder.ToString();
@@ -247,7 +243,7 @@ namespace WinHook
                 case Keys.Shift:
                 case Keys.Control:
                 case Keys.Alt:
-                    return $"{" + vk.ToString() + "}";
+                    return $"{{{vk}}}";
                 default:
                     return ToUnicode(vk, hkl, out scan);
             }
