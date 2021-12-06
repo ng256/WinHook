@@ -2,7 +2,6 @@ using System;
 
 namespace WinHook
 {
-    [Flags]
     public enum KeyEventType
     {
         WM_KEYDOWN = 0x100,
