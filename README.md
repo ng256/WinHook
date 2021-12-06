@@ -142,14 +142,15 @@ Now you can start writing the callback function.
 ```csharp
 IntPtr Callback(HookCode nCode, KeyEventType wParam, KeyboardLowLevelHookData lParam)
 {
-  // ... callback handling and event triggering.
+  // ... callback handling and event triggering
+  // by the way, using here Win API function ToUnicodeEx is very helpfull for converting keystrokes to char symbol and logging the text as the user entered it. 
 }
 ```
 See the KeyboardHook.cs file for the complete implementation.
 ### Windows hook.
 Just writing down all the text is good, but it would be nice idea to understand where it came from.  
 To do this, it would be a good idea, firstly, to tie the entry in the log to the time it was written and, secondly, to determine the program with which the user was working. With the first, everything is obvious. With the second, everything is much more interesting. Through trial and error, a solution was obtained to set a "hook" to switch the user between windows and save the titles of these windows. Then it will immediately become clear where to look for ~~passwords~~ text.  
-I put the word trap in quotes, because this functionality is not a trap in the literal sense and does not have a callback function. Instead, we'll have to take on the responsibility of watching change focus on foreground window.  
+I put the word hook in quotes, because this functionality is not a hook in the literal sense and does not have a callback function. Instead, we'll have to take on the responsibility of watching change focus on foreground window.  
 And the functions **GetForegroundWindow, GetWindowText, GetWindowTextLength** will help us in this.  
 ```csharp
 [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
