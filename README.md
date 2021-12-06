@@ -143,7 +143,8 @@ Now you can start writing the callback function.
 IntPtr Callback(HookCode nCode, KeyEventType wParam, KeyboardLowLevelHookData lParam)
 {
   // ... callback handling and event triggering
-  // by the way, using here Win API function ToUnicodeEx is very helpfull for converting keystrokes to char symbol and logging the text as the user entered it. 
+  // by the way, using here Win API function ToUnicodeEx is very helpfull 
+  // for converting keystrokes to char symbol and logging the text as the user entered it. 
 }
 ```
 See the KeyboardHook.cs file for the complete implementation.
