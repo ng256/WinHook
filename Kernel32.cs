@@ -6,9 +6,7 @@ namespace WinHook
 {
     public static class Kernel32
     {
-        private const string LIBNAME = "kernel32.dll";
-
-        [DllImport(LIBNAME, CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -40,7 +38,7 @@ namespace WinHook
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool PulseEvent(IntPtr hEvent);
 
-        [DllImport("kernel32", SetLastError = true,
+        [DllImport("kernel32.dll", SetLastError = true,
             ExactSpelling = true)]
         [return: MarshalAs(UnmanagedType.I4)]
         public static extern int WaitForSingleObject(
